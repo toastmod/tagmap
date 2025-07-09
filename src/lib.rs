@@ -21,8 +21,12 @@ mod tests {
         let three = tagmap.add(String::from("Red fish!"));
         let one = tagmap.add(String::from("One fish!"));
 
+        assert_eq!(tagmap.len(), 6);
+
         tagmap.eject(sam);
         tagmap.eject(green_eggs);
+
+        assert_eq!(tagmap.len(), 4);
 
         assert_eq!(get(tagmap[one].as_ref()), "One fish!");
         assert_eq!(get(tagmap[two].as_ref()), "Two fish!");
@@ -36,15 +40,21 @@ mod tests {
 
 pub struct TagMap<T> {
     map: Vec<Option<T>>,
-    avail: Vec<usize>
+    avail: Vec<usize>,
+    len: usize,
 }
 
 impl<T> TagMap<T> {
     pub fn new() -> Self {
         Self {
             map: vec![],
-            avail: vec![] 
+            avail: vec![],
+            len: 0usize,
         }
+    }
+
+    pub fn len(&self) -> usize {
+        self.len
     }
 
     /// Add an item to the map and return a `usize` tag.
@@ -56,6 +66,7 @@ impl<T> TagMap<T> {
     /// assert_eq!(tagmap[my_thing_tag].expect("Integrity error!"), 999);
     /// ```
     pub fn add(&mut self, item: T) -> usize {
+        self.len += 1;
         match self.avail.pop() {
             Some(avail) => {
                 self.map[avail] = Some(item); 
@@ -77,6 +88,7 @@ impl<T> TagMap<T> {
     /// let my_thing = tagmap.eject(my_thing_tag).expect("Integrity error!");
     /// ```
     pub fn eject(&mut self, tag: usize) -> Option<T> { 
+        self.len -= 1;
         let o = self.map[tag].take();
         if o.is_some() {
             self.avail.push(tag);
