@@ -38,6 +38,7 @@ mod tests {
 
 #[allow(dead_code)]
 
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TagMap<T> {
     map: Vec<Option<T>>,
     avail: Vec<usize>,
