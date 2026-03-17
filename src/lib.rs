@@ -96,6 +96,21 @@ impl<T> TagMap<T> {
         }
         o
     }
+
+    pub fn get(&self, index: usize) -> Option<&T> {
+        if let Some(v) = self.map.get(index) {
+            v.as_ref()
+        } else {
+            None
+        }
+    }
+    pub fn get_mut(&mut self, index: usize) -> Option<&mut T> {
+        if let Some(v) = self.map.get_mut(index) {
+            v.as_mut()
+        } else {
+            None
+        }
+    }
 }
 
 impl<T> Index<usize> for TagMap<T> {
